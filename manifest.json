@@ -1,0 +1,23 @@
+{
+    "manifest_version": 2,
+    "name": "Render Whitespace on GitHub",
+    "version": "1.3.3",
+    "author": "Gleb Mazovetskiy",    
+    "content_scripts": [
+        {
+            "js": [
+                "script.js"
+            ],
+            "matches": [
+                "https://gist.github.com/*",
+                "https://github.com/*"
+            ],
+            "run_at": "document_end"
+        }
+    ],
+    "homepage_url": "https://gist.github.com/5b6c4517322193fbc51090dc3b57a44a",
+    "description": "Renders spaces as · and tabs as → in all the code on GitHub.",
+    "icons": {
+        "128": "icon128.png"
+    }
+}
