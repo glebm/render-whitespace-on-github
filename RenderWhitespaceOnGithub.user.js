@@ -31,7 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // @domain          gist.github.com
 // @match           https://gist.github.com/*
 // @match           https://github.com/*
-// @homepageUrl     https://gist.github.com/5b6c4517322193fbc51090dc3b57a44a
+// @homepageUrl     https://github.com/glebm/render-whitespace-on-github
 // @run-at          document-end
 // @contributionURL https://etherchain.org/account/0x962644db6d8735446c1af84a2c1f16143f780184
 // ==/UserScript==
