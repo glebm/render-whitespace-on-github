@@ -117,7 +117,7 @@ function replaceWhitespace(node, tab, space, isDiff) {
     }
     const tabParts = originalText.split('\t');
     const tabSpaceParts = tabParts.map(s => s.split(' '));
-    if (!ignoreFirstSpace && tabSpaceParts.length === 1 && 
+    if (!ignoreFirstSpace && tabSpaceParts.length === 1 &&
         tabSpaceParts[0].length === 1) return;
     const insert = (newNode) => {
         parent.insertBefore(newNode, node);
