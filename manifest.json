@@ -15,6 +15,9 @@
             "run_at": "document_end"
         }
     ],
+    "permissions": [
+        "storage"
+    ],
     "homepage_url": "https://github.com/glebm/render-whitespace-on-github",
     "description": "Renders spaces as · and tabs as → in all the code on GitHub.",
     "icons": {

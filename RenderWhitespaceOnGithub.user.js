@@ -36,17 +36,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // @contributionURL https://etherchain.org/account/0x962644db6d8735446c1af84a2c1f16143f780184
 // ==/UserScript==
 
-
 // Settings
-var SPACE = '·';
-var TAB = '→';
-var WHITESPACE_OPACITY = 0.4;
-var COPYABLE_WHITESPACE_INDICATORS = false;
+let settings;
+const DEFAULTS = {
+    whitespaceOpacity: 0.4,
+    copyableWhitespace: false,
+    space: '·',
+    tab: '→',
+};
 
-// Other constants
-var WS_CLASS = 'glebm-ws';
-var ROOT_SELECTOR = 'table[data-tab-size]';
-var NODE_FILTER = {
+// Constants
+const WS_CLASS = 'glebm-ws';
+const ROOT_SELECTOR = 'table[data-tab-size]';
+const NODE_FILTER = {
     acceptNode(node) {
         let parent = node.parentNode;
         if (parent.classList.contains(WS_CLASS)) return NodeFilter.FILTER_SKIP;
@@ -63,10 +65,10 @@ var NODE_FILTER = {
 
 function main() {
     const styleNode = document.createElement('style');
-    styleNode.textContent = COPYABLE_WHITESPACE_INDICATORS ?
-        `.${WS_CLASS} { opacity: ${WHITESPACE_OPACITY}; }` :
+    styleNode.textContent = settings.copyableWhitespaceIndicators ?
+        `.${WS_CLASS} { opacity: ${settings.whitespaceOpacity}; }` :
         `.${WS_CLASS}::before {
-  opacity: ${WHITESPACE_OPACITY};
+  opacity: ${settings.whitespaceOpacity};
   position: absolute;
   text-indent: 0;
 }` + /* In a diff: */
@@ -92,14 +94,14 @@ function main() {
 
 function showWhitespace() {
     for (const root of document.querySelectorAll(ROOT_SELECTOR)) {
-        const tab = TAB.padEnd(+root.dataset.tabSize);
+        const tab = settings.tab.padEnd(+root.dataset.tabSize);
         const treeWalker =
             document.createTreeWalker(root, NodeFilter.SHOW_TEXT, NODE_FILTER);
         const nodes = [];
         while (treeWalker.nextNode()) nodes.push(treeWalker.currentNode);
 
         const isDiff = root.classList.contains('diff-table');
-        for (const node of nodes) replaceWhitespace(node, tab, SPACE, isDiff);
+        for (const node of nodes) replaceWhitespace(node, tab, settings.space, isDiff);
     }
 }
 
@@ -138,7 +140,7 @@ var WS_ADDED_STYLES = new Set();
 function createWhitespaceNode(type, originalText, text, n) {
     const node = document.createElement('span');
     node.classList.add(WS_CLASS);
-    if (COPYABLE_WHITESPACE_INDICATORS) {
+    if (settings.copyableWhitespaceIndicators) {
         node.textContent = text.repeat(n);
     } else {
         const className = `${type}-${n}`;
@@ -166,4 +168,15 @@ function insertParts(parts, isConsecutiveFn, addInterFn, addPartFn) {
     }, 0);
 }
 
-main();
+function onSettingsLoaded(result) {
+    settings = result;
+    main();
+}
+
+if (typeof browser !== 'undefined' && typeof browser.storage !== 'undefined') {
+    browser.storage.sync.get(DEFAULTS).then(onSettingsLoaded);
+} else if (typeof chrome !== 'undefined' && typeof chrome.storage !== 'undefined') {
+    chrome.storage.sync.get(DEFAULTS, onSettingsLoaded);
+} else {
+    onSettingsLoaded(DEFAULTS);
+}
