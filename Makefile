@@ -16,9 +16,9 @@ tmp/firefox/%: %
 	@mkdir -p tmp/firefox
 	cp -p $* tmp/firefox/
 
-tmp/firefox/manifest.json: manifest.json
+tmp/firefox/manifest.json: manifest.json firefox-manifest.sed
 	@mkdir -p tmp/firefox
-	sed s/chrome_style/browser_style/ manifest.json > tmp/firefox/manifest.json
+	sed -f firefox-manifest.sed manifest.json > tmp/firefox/manifest.json
 	touch -r manifest.json tmp/firefox/manifest.json
 
 .PHONY: clean
