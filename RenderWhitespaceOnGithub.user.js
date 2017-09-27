@@ -47,13 +47,14 @@ const DEFAULTS = {
 
 // Constants
 const WS_CLASS = 'glebm-ws';
-const ROOT_SELECTOR = 'table[data-tab-size]';
+const ROOT_SELECTOR = 'table[data-tab-size],div[data-tab-size]';
 const NODE_FILTER = {
     acceptNode(node) {
         let parent = node.parentNode;
         if (parent.classList.contains(WS_CLASS)) return NodeFilter.FILTER_SKIP;
-        while (parent.nodeName != 'TABLE') {
-            if (parent.classList.contains('blob-code-inner')) {
+        while (!parent.dataset.tabSize) {
+            if (parent.classList.contains('js-file-line') ||
+                parent.classList.contains('blob-code-inner')) {
                 return !(parent.firstChild === node && node.nodeValue === ' ') ?
                     NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
             }
@@ -67,7 +68,7 @@ function main() {
     const styleNode = document.createElement('style');
     styleNode.textContent = settings.copyableWhitespaceIndicators ?
         `.${WS_CLASS} { opacity: ${settings.whitespaceOpacity}; }` :
-        `.${WS_CLASS}::before {
+        `.${WS_CLASS} { position: relative } .${WS_CLASS}::before {
   opacity: ${settings.whitespaceOpacity};
   position: absolute;
   text-indent: 0;
