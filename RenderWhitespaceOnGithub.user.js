@@ -52,7 +52,7 @@ const NODE_FILTER = {
     acceptNode(node) {
         let parent = node.parentNode;
         if (parent.classList.contains(WS_CLASS)) return NodeFilter.FILTER_SKIP;
-        while (!parent.dataset.tabSize) {
+        while (!(parent.dataset && parent.dataset.tabSize)) {
             if (parent.classList.contains('js-file-line') ||
                 parent.classList.contains('blob-code-inner')) {
                 return !(parent.firstChild === node && node.nodeValue === ' ') ?
@@ -78,32 +78,60 @@ function main() {
 }`;
     document.head.appendChild(styleNode);
 
+    // github/legacy/pages/diffs/expander
+    const diffTableObserver = new MutationObserver((records) => {
+        for (const record of records) {
+            showWhitespaceIn(record.target.parentElement);
+        }
+    });
+    const initDiffExpanders = () => {
+        for (const node of document.querySelectorAll('.diff-table > tbody')) {
+            diffTableObserver.observe(node, { childList: true });
+        }
+    };
+    document.addEventListener('pjax:success', () => {
+        diffTableObserver.disconnect();
+    });
+
+    // https://github.com/github/include-fragment-element
     const registeredFragments = new WeakSet();
-    const showWhitespaceOnNextTick = () => setTimeout(showWhitespace, 0);
-    const initDOM = () => {
-        showWhitespace();
-        // https://github.com/github/include-fragment-element
+    const onFragmentLoadEnd = (node) => {
+        return () => {
+            setTimeout(() => {
+                for (const root of node.querySelectorAll(ROOT_SELECTOR)) {
+                    showWhitespaceIn(root);
+                }
+            }, 0);
+        };
+    }
+    const initFragments = () => {
         for (const node of document.querySelectorAll('include-fragment')) {
             if (registeredFragments.has(node)) continue;
             registeredFragments.add(node);
-            node.addEventListener('loadend', showWhitespaceOnNextTick);
+            node.addEventListener('loadend', onFragmentLoadEnd(node.parentElement));
         }
+    }
+
+    const initDOM = () => {
+        for (const root of document.querySelectorAll(ROOT_SELECTOR)) {
+            showWhitespaceIn(root);
+        }
+        initDiffExpanders();
+        initFragments();
     };
     document.addEventListener('pjax:success', initDOM);
     initDOM();
 }
 
-function showWhitespace() {
-    for (const root of document.querySelectorAll(ROOT_SELECTOR)) {
-        const tab = settings.tab.padEnd(+root.dataset.tabSize);
-        const treeWalker =
-            document.createTreeWalker(root, NodeFilter.SHOW_TEXT, NODE_FILTER);
-        const nodes = [];
-        while (treeWalker.nextNode()) nodes.push(treeWalker.currentNode);
+function showWhitespaceIn(root) {
+    const tab = settings.tab.padEnd(+root.dataset.tabSize);
+    const treeWalker =
+        document.createTreeWalker(root, NodeFilter.SHOW_TEXT, NODE_FILTER);
+    const nodes = [];
+    while (treeWalker.nextNode()) nodes.push(treeWalker.currentNode);
 
-        const isDiff = root.classList.contains('diff-table');
-        for (const node of nodes) replaceWhitespace(node, tab, settings.space, isDiff);
-    }
+    const isDiff = root.classList.contains('diff-table');
+    for (const node of nodes) replaceWhitespace(node, tab, settings.space, isDiff);
 }
 
 function replaceWhitespace(node, tab, space, isDiff) {
