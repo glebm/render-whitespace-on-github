@@ -68,13 +68,13 @@ function main() {
     const styleNode = document.createElement('style');
     styleNode.textContent = settings.copyableWhitespaceIndicators ?
         `.${WS_CLASS} { opacity: ${settings.whitespaceOpacity}; }` :
-        `.${WS_CLASS} { position: relative } .${WS_CLASS}::before {
+        `.${WS_CLASS} { position: relative; }
+.${WS_CLASS}::before {
   opacity: ${settings.whitespaceOpacity};
   position: absolute;
   text-indent: 0;
-}` + /* In a diff: */
-        `.blob-code > .blob-code-inner .${WS_CLASS}::before {
-  line-height: 2;
+  top: 0;
+  line-height: normal;
 }`;
     document.head.appendChild(styleNode);
 
