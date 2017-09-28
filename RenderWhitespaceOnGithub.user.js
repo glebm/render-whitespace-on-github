@@ -53,7 +53,9 @@ const NODE_FILTER = {
         let parent = node.parentNode;
         if (parent.classList.contains(WS_CLASS)) return NodeFilter.FILTER_SKIP;
         while (!(parent.dataset && parent.dataset.tabSize)) {
-            if (parent.classList.contains('js-file-line') ||
+            if ( /* mobile code */
+                parent.classList.contains('js-file-line') ||
+                 /* desktop code, diff; mobile diff */
                 parent.classList.contains('blob-code-inner')) {
                 return !(parent.firstChild === node && node.nodeValue === ' ') ?
                     NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
@@ -130,24 +132,30 @@ function showWhitespaceIn(root) {
     const nodes = [];
     while (treeWalker.nextNode()) nodes.push(treeWalker.currentNode);
 
-    const isDiff = root.classList.contains('diff-table');
+    const isDiff = /* desktop */ root.classList.contains('diff-table') ||
+        /* mobile */ root.classList.contains('file-diff');
     for (const node of nodes) replaceWhitespace(node, tab, settings.space, isDiff);
+}
+
+function isSpace(char) {
+    return /* desktop */ char === ' ' ||
+        /* mobile */ char === '\xa0' /* &nbsp; */;
 }
 
 function replaceWhitespace(node, tab, space, isDiff) {
     let originalText = node.nodeValue;
     const parent = node.parentNode;
     const ignoreFirstSpace = isDiff &&
-        originalText.charAt(0) === ' ' &&
+        isSpace(originalText.charAt(0)) &&
         parent.classList.contains('blob-code-inner') &&
         parent.firstChild === node;
     if (ignoreFirstSpace) {
-        if (originalText === ' ') return;
+        if (isSpace(originalText)) return;
         originalText = originalText.slice(1);
         parent.insertBefore(document.createTextNode(' '), node);
     }
     const tabParts = originalText.split('\t');
-    const tabSpaceParts = tabParts.map(s => s.split(' '));
+    const tabSpaceParts = tabParts.map(s => s.split(/[ \xa0]/));
     if (!ignoreFirstSpace && tabSpaceParts.length === 1 &&
         tabSpaceParts[0].length === 1) return;
     const insert = (newNode) => {
