@@ -23,6 +23,4 @@ tmp/firefox/manifest.json: manifest.json firefox-manifest.sed
 
 .PHONY: clean
 clean:
-	rm -rf dist/RenderWhitespaceOnGithub-chrome.zip \
-	       dist/RenderWhitespaceOnGithub-firefox.zip \
-		   tmp
+	rm -rf dist/ tmp/
