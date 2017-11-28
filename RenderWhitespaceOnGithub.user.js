@@ -27,6 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // @namespace       https://github.com/glebm
 // @version         1.3.7
 // @author          Gleb Mazovetskiy <glex.spb@gmail.com>
+// @license         MIT
 // @domain          github.com
 // @domain          gist.github.com
 // @match           https://gist.github.com/*
