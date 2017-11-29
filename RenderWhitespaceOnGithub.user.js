@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // @name            Render Whitespace on GitHub
 // @description     Renders spaces as · and tabs as → in all the code on GitHub.
 // @namespace       https://github.com/glebm
-// @version         1.3.7
+// @version         1.3.8
 // @author          Gleb Mazovetskiy <glex.spb@gmail.com>
 // @license         MIT
 // @domain          github.com
@@ -127,8 +127,9 @@ function main() {
 }
 
 function showWhitespaceIn(root) {
+    const rootStyle = window.getComputedStyle(root);
     const tab = settings.tab.padEnd(
-        +(window.getComputedStyle(root)['tab-size'] || root.dataset.tabSize));
+        +(rootStyle['tab-size'] || rootStyle['-moz-tab-size'] || root.dataset.tabSize));
     const treeWalker =
         document.createTreeWalker(root, NodeFilter.SHOW_TEXT, NODE_FILTER);
     const nodes = [];

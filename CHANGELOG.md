@@ -1,3 +1,8 @@
+v1.3.8
+
+* Compatibility with extensions that override tab size in Firefox.
+  [#2](https://github.com/glebm/render-whitespace-on-github/issues/2)
+
 v1.3.7
 
 * Compatibility with extensions that override tab size.
