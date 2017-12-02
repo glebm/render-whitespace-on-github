@@ -1,3 +1,7 @@
+v1.3.9
+
+* Compatibility with "Refined GitHub" extension's "remove-diff-signs" feature.
+
 v1.3.8
 
 * Compatibility with extensions that override tab size in Firefox.

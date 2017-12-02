@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // @name            Render Whitespace on GitHub
 // @description     Renders spaces as · and tabs as → in all the code on GitHub.
 // @namespace       https://github.com/glebm
-// @version         1.3.8
+// @version         1.3.9
 // @author          Gleb Mazovetskiy <glex.spb@gmail.com>
 // @license         MIT
 // @domain          github.com
@@ -150,8 +150,11 @@ function replaceWhitespace(node, tab, space, isDiff) {
     const parent = node.parentNode;
     const ignoreFirstSpace = isDiff &&
         isSpace(originalText.charAt(0)) &&
+        parent.firstChild === node &&
         parent.classList.contains('blob-code-inner') &&
-        parent.firstChild === node;
+        // "Refined Github" extension removes the extra first space:
+        // https://github.com/sindresorhus/refined-github/blob/34f713a331bf7dbf65c2082d3d2c667e06f22021/src/features/remove-diff-signs.js#L20
+        !parent.matches('.refined-github-diff-signs *');
     if (ignoreFirstSpace) {
         if (isSpace(originalText)) return;
         originalText = originalText.slice(1);
