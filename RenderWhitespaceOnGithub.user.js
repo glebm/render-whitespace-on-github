@@ -71,13 +71,19 @@ function main() {
     const styleNode = document.createElement('style');
     styleNode.textContent = settings.copyableWhitespaceIndicators ?
         `.${WS_CLASS} { opacity: ${settings.whitespaceOpacity}; }` :
-        `.${WS_CLASS} { position: relative; }
-.${WS_CLASS}::before {
+        `.${WS_CLASS}::before {
   opacity: ${settings.whitespaceOpacity};
   position: absolute;
   text-indent: 0;
-  top: 0;
-  line-height: normal;
+}
+/* desktop non-diff, mobile diff */
+.blob-code .${WS_CLASS}::before {
+  line-height: 20px;
+}
+/* horizontal scroll */
+.blob-file-content pre,
+.diff-view .file .highlight {
+  position: relative;
 }`;
     document.head.appendChild(styleNode);
 
