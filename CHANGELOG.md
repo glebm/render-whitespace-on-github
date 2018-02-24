@@ -1,3 +1,8 @@
+v1.3.11
+
+* Fixes horizontal scroll in file view (bug introduced in v1.3.10).
+* Fixes "Copyable whitespace indicators" setting.
+
 v1.3.10
 
 * Performance improvements.
