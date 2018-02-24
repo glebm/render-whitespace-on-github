@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // @name            Render Whitespace on GitHub
 // @description     Renders spaces as · and tabs as → in all the code on GitHub.
 // @namespace       https://github.com/glebm
-// @version         1.3.10
+// @version         1.3.11
 // @author          Gleb Mazovetskiy <glex.spb@gmail.com>
 // @license         MIT
 // @domain          github.com
