@@ -29,10 +29,12 @@ function init() {
         e.preventDefault();
         saveOptions();
     });
-    ui.form.addEventListener('input', function() {
+    for (const eventName of ['input', 'change']) {
+      ui.form.addEventListener(eventName, function() {
         ui.status.innerText = 'Unsaved changes';
-        updateRestoreDefaultsBtnDisabled();
-    });
+        ui.restoreDefaultsBtn.disabled = areSettingsEqualToDefault();
+      });
+    }
     ui.restoreDefaultsBtn.addEventListener('click', function() {
         restoreOptions(DEFAULTS);
         ui.status.innerText = 'Unsaved changes';
@@ -59,8 +61,8 @@ function restoreOptions({whitespaceOpacity, copyableWhitespace, space, tab}) {
     ui.copyableWhitespace.checked = copyableWhitespace;
     ui.space.value = space;
     ui.tab.value = tab;
+    ui.restoreDefaultsBtn.disabled = areSettingsEqualToDefault();
     updatePreview();
-    updateRestoreDefaultsBtnDisabled();
 }
 
 function getFormValues() {
@@ -77,10 +79,9 @@ function updatePreview() {
     ui.preview.style.opacity = ui.whitespaceOpacity.value;
 }
 
-function updateRestoreDefaultsBtnDisabled() {
+function areSettingsEqualToDefault() {
     const formValues = getFormValues();
-    ui.restoreDefaultsBtn.disabled =
-        Object.keys(DEFAULTS).every(k => DEFAULTS[k] === formValues[k]);
+    return Object.keys(DEFAULTS).every(k => DEFAULTS[k] === formValues[k])
 }
 
 function onError(error) {

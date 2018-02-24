@@ -190,7 +190,7 @@ var WS_ADDED_STYLES = new Set();
 function createWhitespaceNode(type, originalText, text, n) {
     const node = document.createElement('span');
     node.classList.add(WS_CLASS);
-    if (settings.copyableWhitespaceIndicators) {
+    if (settings.copyableWhitespace) {
         node.textContent = text.repeat(n);
     } else {
         const className = `${type}-${n}`;
