@@ -82,7 +82,8 @@ function main() {
 }
 /* horizontal scroll */
 .blob-file-content pre,
-.diff-view .file .highlight {
+.diff-view .file .highlight,
+.blob-wrapper {
   position: relative;
 }`;
     document.head.appendChild(styleNode);
