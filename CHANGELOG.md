@@ -1,3 +1,8 @@
+v1.3.10
+
+* Performance improvements.
+[#8](https://github.com/glebm/render-whitespace-on-github/issues/8)
+
 v1.3.9
 
 * Compatibility with "Refined GitHub" extension's "remove-diff-signs" feature.
