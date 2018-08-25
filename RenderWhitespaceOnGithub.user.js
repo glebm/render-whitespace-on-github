@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // @name            Render Whitespace on GitHub
 // @description     Renders spaces as · and tabs as → in all the code on GitHub.
 // @namespace       https://github.com/glebm
-// @version         1.3.11
+// @version         1.3.12
 // @author          Gleb Mazovetskiy <glex.spb@gmail.com>
 // @license         MIT
 // @domain          github.com
@@ -48,12 +48,12 @@ const DEFAULTS = {
 
 // Constants
 const WS_CLASS = 'glebm-ws';
-const ROOT_SELECTOR = 'table[data-tab-size],div[data-tab-size]';
+const ROOT_SELECTOR = 'table[data-tab-size],div[data-tab-size],table.diff-table';
 const NODE_FILTER = {
     acceptNode(node) {
         let parent = node.parentNode;
         if (parent.classList.contains(WS_CLASS)) return NodeFilter.FILTER_SKIP;
-        while (!(parent.dataset && parent.dataset.tabSize)) {
+        while (!parent.matches(ROOT_SELECTOR)) {
             if ( /* mobile code */
                 parent.classList.contains('js-file-line') ||
                  /* desktop code, diff; mobile diff */
@@ -159,6 +159,7 @@ function replaceWhitespace(node, tab, space, isDiff) {
         isSpace(originalText.charAt(0)) &&
         parent.firstChild === node &&
         parent.classList.contains('blob-code-inner') &&
+        parent.parentNode.classList.contains('blob-expanded') &&
         // "Refined Github" extension removes the extra first space:
         // https://github.com/sindresorhus/refined-github/blob/34f713a331bf7dbf65c2082d3d2c667e06f22021/src/features/remove-diff-signs.js#L20
         !parent.matches('.refined-github-diff-signs *');

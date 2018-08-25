@@ -1,3 +1,8 @@
+v1.3.12
+
+* Update handling of the first space in diffs.
+* Highlight code in discussions.
+
 v1.3.11
 
 * Fixes horizontal scroll in file view (bug introduced in v1.3.10).
